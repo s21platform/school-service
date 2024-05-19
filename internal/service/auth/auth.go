@@ -1,12 +1,11 @@
 package auth
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
-	"log"
+	"google.golang.org/grpc/status"
 	"regexp"
 	"strings"
 )
@@ -41,21 +40,83 @@ type tokenResponse struct {
 	Scope            string `json:"scope"`
 }
 
-func LoginToPlatform(email, password string) (string, error) {
+//func LoginToPlatform(client *resty.Client, email, password string) (string, error) {
+//	state := uuid.New().String()
+//	nonce := uuid.New().String()
+//
+//	// Generate first link to sberclass
+//	link := fmt.Sprintf("https://auth.sberclass.ru/auth/realms/EduPowerKeycloak/protocol/openid-connect/auth?client_id=school21&redirect_uri=https%%3A%%2F%%2Fedu.21-school.ru%%2F&state=%s&response_mode=fragment&response_type=code&scope=openid&nonce=%s", state, nonce)
+//
+//	// First request to get authURL
+//	res, err := client.R().Get(link)
+//	if err != nil || res.StatusCode() != 200 {
+//		return "", status.New(400, "Error while get auth link").Err()
+//	}
+//
+//	// Set New Cookie
+//	client.SetCookies(res.Cookies())
+//
+//	// Get the authUrl from response
+//	loginActionPattern := regexp.MustCompile(`https://.+?"`)
+//	loginUrl := loginActionPattern.FindString(string(res.Body()))
+//	loginUrl = loginUrl[:len(loginUrl)-1]
+//	loginUrl = strings.Replace(loginUrl, "amp;", "", -1)
+//	fmt.Println("Login Action URL:", loginUrl)
+//
+//	res, err = client.R().SetContext(context.Background()).SetFormData(map[string]string{
+//		"username": email,
+//		"password": password,
+//	}).Post(loginUrl)
+//
+//	fmt.Println(res.StatusCode())
+//
+//	if err != nil && res.StatusCode() != 302 {
+//		return "", status.New(400, "Error while send credential").Err()
+//	}
+//
+//	client.SetCookies(res.Cookies())
+//
+//	location := res.Header().Get("location")
+//	res, err = client.R().Post(location)
+//
+//	if err != nil && res.StatusCode() != 302 {
+//		return "", status.New(401, "Login or password is incorrect").Err()
+//	}
+//
+//	location = res.Header().Get("location")
+//	oauthCodePattern := regexp.MustCompile(`code=([^&$]+)[&$]?`)
+//
+//	oauthCodeMatch := oauthCodePattern.FindStringSubmatch(location)
+//	oauthCode := ""
+//	if len(oauthCodeMatch) > 1 {
+//		oauthCode = oauthCodeMatch[1]
+//	}
+//
+//	client.SetCookies(res.Cookies())
+//
+//	res, err = client.R().SetFormData(map[string]string{
+//		"code":         oauthCode,
+//		"grant_type":   "authorization_code",
+//		"client_id":    "school21",
+//		"redirect_uri": "https://edu.21-school.ru/",
+//	}).Post("https://auth.sberclass.ru/auth/realms/EduPowerKeycloak/protocol/openid-connect/token")
+//
+//	tokStruct := tokenResponse{}
+//	err = json.Unmarshal(res.Body(), &tokStruct)
+//	return tokStruct.AccessToken, nil
+//}
+
+func LoginToPlatform(client *resty.Client, baseURL, email, password string) (string, error) {
 	state := uuid.New().String()
 	nonce := uuid.New().String()
 
-	// Setup client. Switch off redirects
-	client := resty.New()
-	client.SetRedirectPolicy(resty.NoRedirectPolicy())
-
 	// Generate first link to sberclass
-	link := fmt.Sprintf("https://auth.sberclass.ru/auth/realms/EduPowerKeycloak/protocol/openid-connect/auth?client_id=school21&redirect_uri=https%%3A%%2F%%2Fedu.21-school.ru%%2F&state=%s&response_mode=fragment&response_type=code&scope=openid&nonce=%s", state, nonce)
+	link := fmt.Sprintf("%s/auth/realms/EduPowerKeycloak/protocol/openid-connect/auth?client_id=school21&redirect_uri=https%%3A%%2F%%2Fedu.21-school.ru%%2F&state=%s&response_mode=fragment&response_type=code&scope=openid&nonce=%s", baseURL, state, nonce)
 
 	// First request to get authURL
 	res, err := client.R().Get(link)
 	if err != nil || res.StatusCode() != 200 {
-		log.Fatalln("Error while make request")
+		return "", status.New(400, "Error while get auth link").Err()
 	}
 
 	// Set New Cookie
@@ -68,15 +129,15 @@ func LoginToPlatform(email, password string) (string, error) {
 	loginUrl = strings.Replace(loginUrl, "amp;", "", -1)
 	fmt.Println("Login Action URL:", loginUrl)
 
-	res, err = client.R().SetContext(context.Background()).SetFormData(map[string]string{
+	res, err = client.R().SetFormData(map[string]string{
 		"username": email,
 		"password": password,
 	}).Post(loginUrl)
 
-	fmt.Println(res.StatusCode())
+	fmt.Println("statusCode", res.StatusCode())
 
 	if err != nil && res.StatusCode() != 302 {
-		fmt.Println("not 302", err)
+		return "", status.New(400, "Error while send credential").Err()
 	}
 
 	client.SetCookies(res.Cookies())
@@ -85,7 +146,7 @@ func LoginToPlatform(email, password string) (string, error) {
 	res, err = client.R().Post(location)
 
 	if err != nil && res.StatusCode() != 302 {
-		log.Fatalf("Error")
+		return "", status.New(401, "Login or password is incorrect").Err()
 	}
 
 	location = res.Header().Get("location")
@@ -104,7 +165,7 @@ func LoginToPlatform(email, password string) (string, error) {
 		"grant_type":   "authorization_code",
 		"client_id":    "school21",
 		"redirect_uri": "https://edu.21-school.ru/",
-	}).Post("https://auth.sberclass.ru/auth/realms/EduPowerKeycloak/protocol/openid-connect/token")
+	}).Post(fmt.Sprintf("%s/auth/realms/EduPowerKeycloak/protocol/openid-connect/token", baseURL))
 
 	tokStruct := tokenResponse{}
 	err = json.Unmarshal(res.Body(), &tokStruct)
