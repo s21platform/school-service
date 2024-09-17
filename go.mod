@@ -3,19 +3,17 @@ module github.com/s21platform/school-service
 go 1.22.2
 
 require (
-	github.com/go-resty/resty/v2 v2.13.1
-	github.com/google/uuid v1.6.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
-	github.com/s21platform/school-proto v0.0.0-20240515074128-d7365c2f61dc
+	github.com/s21platform/school-proto v0.0.1
 	google.golang.org/grpc v1.64.0
 )
 
 require (
 	github.com/BurntSushi/toml v1.3.2 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
-	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/stretchr/testify v1.9.0 // indirect
+	github.com/redis/go-redis/v9 v9.6.1 // indirect
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect

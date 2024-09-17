@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -60,7 +60,7 @@ func LoginToPlatform(email, password string) (*TokenResponse, error) {
 		return nil, status.Errorf(codes.InvalidArgument, "Неверно указан логин или пароль")
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Printf("Не удалось преобразовать ответ в байты: %v", err)
 		return nil, err
