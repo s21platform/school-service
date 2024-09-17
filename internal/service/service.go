@@ -40,7 +40,6 @@ func (s *Server) GetTribesByCampusUuid(ctx context.Context, in *school.CampusUui
 	log.Println("Trying to get list of tribes by campus uuid: ", in.CampusUuid)
 
 	token, err := s.redisR.Get(ctx)
-	log.Println(token)
 
 	if err != nil {
 		return nil, err
