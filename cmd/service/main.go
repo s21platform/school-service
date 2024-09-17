@@ -4,6 +4,7 @@ import (
 	"fmt"
 	school_proto "github.com/s21platform/school-proto/school-proto"
 	"github.com/s21platform/school-service/internal/config"
+	"github.com/s21platform/school-service/internal/repository/redis"
 	"github.com/s21platform/school-service/internal/service"
 	"google.golang.org/grpc"
 	"log"
@@ -13,9 +14,12 @@ import (
 func main() {
 	cfg := config.MustLoad()
 
-	srv := service.New()
+	redisRepo := redis.New(cfg)
 	s := grpc.NewServer()
+	srv := service.New(redisRepo)
 	school_proto.RegisterSchoolServiceServer(s, srv)
+
+	log.Println("starting server, port:", cfg.Service.Port)
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.Service.Port))
 	if err != nil {
