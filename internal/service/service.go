@@ -32,7 +32,7 @@ func (s *Server) Login(ctx context.Context, request *school.SchoolLoginRequest) 
 	return &school.SchoolLoginResponse{Token: resp.AccessToken}, nil
 }
 
-func (s *Server) GetCampuses(ctx context.Context) (*school.CampusesOut, error) {
+func (s *Server) GetCampuses(ctx context.Context, _ *school.Empty) (*school.CampusesOut, error) {
 	token, err := s.redisR.Get(ctx)
 	if err != nil {
 		return nil, err
