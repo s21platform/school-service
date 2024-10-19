@@ -32,6 +32,30 @@ func (s *Server) Login(ctx context.Context, request *school.SchoolLoginRequest) 
 	return &school.SchoolLoginResponse{Token: resp.AccessToken}, nil
 }
 
+func (s *Server) GetCampuses(ctx context.Context, _ *school.Empty) (*school.CampusesOut, error) {
+	token, err := s.redisR.Get(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := edu_school.GetAllCampuses(token)
+	if err != nil {
+		log.Printf("error of getting campuses: %v", err)
+		return nil, err
+	}
+
+	var needCampuses []*school.Campus
+	for _, value := range resp.Campuses {
+		needCampuses = append(needCampuses, &school.Campus{
+			CampusUuid: value.Uuid,
+			ShortName:  value.ShortName,
+			FullName:   value.FullName,
+		})
+	}
+
+	return &school.CampusesOut{Campuses: needCampuses}, nil
+}
+
 func (s *Server) GetTribesByCampusUuid(ctx context.Context, in *school.CampusUuidIn) (*school.TribesOut, error) {
 	if in.CampusUuid == "" {
 		return nil, errors.New("campus uuid is empty")
