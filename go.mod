@@ -1,10 +1,11 @@
 module github.com/s21platform/school-service
 
-go 1.22.2
+go 1.22.8
 
 require (
 	github.com/ilyakaznacheev/cleanenv v1.5.0
-	github.com/s21platform/school-proto v0.0.1
+	github.com/redis/go-redis/v9 v9.6.1
+	github.com/s21platform/school-proto v0.0.3
 	google.golang.org/grpc v1.64.0
 )
 
@@ -13,7 +14,6 @@ require (
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
-	github.com/redis/go-redis/v9 v9.6.1 // indirect
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
