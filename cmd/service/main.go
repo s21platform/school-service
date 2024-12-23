@@ -2,13 +2,15 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"net"
+
+	"google.golang.org/grpc"
+
 	school_proto "github.com/s21platform/school-proto/school-proto"
 	"github.com/s21platform/school-service/internal/config"
 	"github.com/s21platform/school-service/internal/repository/redis"
 	"github.com/s21platform/school-service/internal/service"
-	"google.golang.org/grpc"
-	"log"
-	"net"
 )
 
 func main() {

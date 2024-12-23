@@ -3,12 +3,14 @@ package service
 import (
 	"context"
 	"errors"
-	school "github.com/s21platform/school-proto/school-proto"
-	"github.com/s21platform/school-service/internal/usecase/edu_school"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"log"
 	"time"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
+	school "github.com/s21platform/school-proto/school-proto"
+	"github.com/s21platform/school-service/internal/usecase/edu_school"
 )
 
 type Server struct {
