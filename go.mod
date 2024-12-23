@@ -5,7 +5,7 @@ go 1.22.8
 require (
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/redis/go-redis/v9 v9.6.1
-	github.com/s21platform/school-proto v0.0.3
+	github.com/s21platform/school-proto v0.0.4
 	google.golang.org/grpc v1.64.0
 )
 
