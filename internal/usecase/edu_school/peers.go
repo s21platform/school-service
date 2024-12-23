@@ -6,11 +6,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-)
 
-type PeersResp struct {
-	Peers []string `json:"participants"`
-}
+	"github.com/s21platform/school-service/internal/model"
+)
 
 func GetPeers(ctx context.Context, token, campusUuid string, offset, limit int64) ([]string, error) {
 	url := fmt.Sprintf("https://edu-api.21-school.ru/services/21-school/api/v1/campuses/%s/participantslimit=%d&offset=%d", campusUuid, limit, offset)
@@ -39,7 +37,7 @@ func GetPeers(ctx context.Context, token, campusUuid string, offset, limit int64
 		return nil, fmt.Errorf("cannot read response body: %v", err)
 	}
 
-	var peers PeersResp
+	var peers model.PeersResponse
 	if err := json.Unmarshal(body, &peers); err != nil {
 		return nil, fmt.Errorf("cannot parse response body: %v", err)
 	}

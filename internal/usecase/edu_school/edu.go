@@ -3,28 +3,18 @@ package edu_school
 import (
 	"encoding/json"
 	"fmt"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
+	"github.com/s21platform/school-service/internal/model"
 )
 
-type TokenResponse struct {
-	Error            string `json:"error"`
-	AccessToken      string `json:"access_token"`
-	ExpiresIn        int64  `json:"expires_in"`
-	RefreshExpiresIn int64  `json:"refresh_expires_in"`
-	RefreshToken     string `json:"refresh_token"`
-	TokenType        string `json:"token_type"`
-	IDToken          string `json:"id_token"`
-	NotBeforePolicy  int64  `json:"not-before-policy"`
-	SessionState     string `json:"session_state"`
-	Scope            string `json:"scope"`
-}
-
-func LoginToPlatform(email, password string) (*TokenResponse, error) {
+func LoginToPlatform(email, password string) (*model.TokenResponse, error) {
 	// URL для запроса токена
 	tokenURL := "https://auth.sberclass.ru/auth/realms/EduPowerKeycloak/protocol/openid-connect/token"
 
@@ -67,7 +57,7 @@ func LoginToPlatform(email, password string) (*TokenResponse, error) {
 	}
 
 	// Чтение и вывод ответа
-	var result TokenResponse
+	var result model.TokenResponse
 	err = json.Unmarshal(body, &result)
 	if err != nil {
 		fmt.Printf("Не удалось преобразовать байты в структуру: %v", err)
