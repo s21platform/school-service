@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	logger_lib "github.com/s21platform/logger-lib"
+	"github.com/s21platform/school-service/internal/infra"
 	"log"
 	"net"
 
@@ -15,9 +17,13 @@ import (
 
 func main() {
 	cfg := config.MustLoad()
+	logger := logger_lib.New(cfg.Logger.Host, cfg.Logger.Port, cfg.Service.Name, cfg.Platform.Env)
 
 	redisRepo := redis.New(cfg)
-	s := grpc.NewServer()
+	s := grpc.NewServer(
+		grpc.ChainUnaryInterceptor(infra.Logger(logger)),
+	)
+
 	srv := service.New(redisRepo)
 	school_proto.RegisterSchoolServiceServer(s, srv)
 

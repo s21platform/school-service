@@ -3,6 +3,9 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
+	logger_lib "github.com/s21platform/logger-lib"
+	"github.com/s21platform/school-service/internal/config"
 	"log"
 	"time"
 
@@ -61,14 +64,18 @@ func (s *Server) GetCampuses(ctx context.Context, _ *school.Empty) (*school.Camp
 }
 
 func (s *Server) GetPeers(ctx context.Context, in *school.GetPeersIn) (*school.GetPeersOut, error) {
+	logger := logger_lib.FromContext(ctx, config.KeyLogger)
+	logger.AddFuncName("GetPeers")
+
 	token, err := s.redisR.Get(ctx)
 	if err != nil {
-		log.Printf("cannot get peer token, err: %v", err)
+		logger.Error(fmt.Sprintf("cannot get peer token, err: %v", err))
 		return nil, status.Errorf(codes.Internal, "cannot get peer token, err: %v", err)
 	}
 
 	peers, err := edu_school.GetPeers(ctx, token, in.CampusUuid, in.Offset, in.Limit)
 	if err != nil {
+		logger.Error(fmt.Sprintf("cannot get peers from edu, err: %v", err))
 		return nil, status.Errorf(codes.Internal, "cannot get peers from edu, err: %v", err)
 	}
 

@@ -6,13 +6,29 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
+type key string
+
+const KeyLogger = key("logger")
+
 type Config struct {
-	Service Service
-	Cache   Cache
+	Service  Service
+	Cache    Cache
+	Logger   Logger
+	Platform Platform
+}
+
+type Logger struct {
+	Host string `env:"LOGGER_SERVICE_HOST"`
+	Port string `env:"LOGGER_SERVICE_PORT"`
 }
 
 type Service struct {
 	Port string `env:"SCHOOL_SERVICE_PORT"`
+	Name string `env:"SCHOOL_SERVICE_NAME"`
+}
+
+type Platform struct {
+	Env string `env:"ENV"`
 }
 
 type Cache struct {

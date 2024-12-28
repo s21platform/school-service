@@ -11,7 +11,7 @@ import (
 )
 
 func GetPeers(ctx context.Context, token, campusUuid string, offset, limit int64) ([]string, error) {
-	url := fmt.Sprintf("https://edu-api.21-school.ru/services/21-school/api/v1/campuses/%s/participantslimit=%d&offset=%d", campusUuid, limit, offset)
+	url := fmt.Sprintf("https://edu-api.21-school.ru/services/21-school/api/v1/campuses/%s/participants?limit=%d&offset=%d", campusUuid, limit, offset)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
