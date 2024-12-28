@@ -4,14 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	logger_lib "github.com/s21platform/logger-lib"
-	"github.com/s21platform/school-service/internal/config"
 	"log"
 	"time"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
+	logger_lib "github.com/s21platform/logger-lib"
+	"github.com/s21platform/school-service/internal/config"
 	school "github.com/s21platform/school-proto/school-proto"
 	"github.com/s21platform/school-service/internal/usecase/edu_school"
 )

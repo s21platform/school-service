@@ -2,15 +2,15 @@ package main
 
 import (
 	"fmt"
-	logger_lib "github.com/s21platform/logger-lib"
-	"github.com/s21platform/school-service/internal/infra"
 	"log"
 	"net"
 
 	"google.golang.org/grpc"
 
+	logger_lib "github.com/s21platform/logger-lib"
 	school_proto "github.com/s21platform/school-proto/school-proto"
 	"github.com/s21platform/school-service/internal/config"
+	"github.com/s21platform/school-service/internal/infra"
 	"github.com/s21platform/school-service/internal/repository/redis"
 	"github.com/s21platform/school-service/internal/service"
 )
