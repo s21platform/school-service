@@ -4,13 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
+	"math/rand"
+	"time"
+
 	"github.com/redis/go-redis/v9"
 	"github.com/s21platform/school-service/internal/config"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"log"
-	"math/rand"
-	"time"
 )
 
 type Repository struct {

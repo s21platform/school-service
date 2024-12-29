@@ -3,10 +3,17 @@ package service
 import (
 	"context"
 	"errors"
-	school "github.com/s21platform/school-proto/school-proto"
-	"github.com/s21platform/school-service/internal/usecase/edu_school"
+	"fmt"
 	"log"
 	"time"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
+	logger_lib "github.com/s21platform/logger-lib"
+	school "github.com/s21platform/school-proto/school-proto"
+	"github.com/s21platform/school-service/internal/config"
+	"github.com/s21platform/school-service/internal/usecase/edu_school"
 )
 
 type Server struct {
@@ -54,6 +61,25 @@ func (s *Server) GetCampuses(ctx context.Context, _ *school.Empty) (*school.Camp
 	}
 
 	return &school.CampusesOut{Campuses: needCampuses}, nil
+}
+
+func (s *Server) GetPeers(ctx context.Context, in *school.GetPeersIn) (*school.GetPeersOut, error) {
+	logger := logger_lib.FromContext(ctx, config.KeyLogger)
+	logger.AddFuncName("GetPeers")
+
+	token, err := s.redisR.Get(ctx)
+	if err != nil {
+		logger.Error(fmt.Sprintf("cannot get peer token, err: %v", err))
+		return nil, status.Errorf(codes.Internal, "cannot get peer token, err: %v", err)
+	}
+
+	peers, err := edu_school.GetPeers(ctx, token, in.CampusUuid, in.Offset, in.Limit)
+	if err != nil {
+		logger.Error(fmt.Sprintf("cannot get peers from edu, err: %v", err))
+		return nil, status.Errorf(codes.Internal, "cannot get peers from edu, err: %v", err)
+	}
+
+	return &school.GetPeersOut{Peer: peers}, nil
 }
 
 func (s *Server) GetTribesByCampusUuid(ctx context.Context, in *school.CampusUuidIn) (*school.TribesOut, error) {

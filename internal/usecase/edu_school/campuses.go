@@ -2,30 +2,16 @@ package edu_school
 
 import (
 	"encoding/json"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 	"io"
 	"net/http"
+
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+
+	"github.com/s21platform/school-service/internal/model"
 )
 
-type ErrorOfGettingCampuses struct {
-	Status        int    `json:"status"`
-	ExceptionUuid string `json:"exceptionUUID"`
-	Code          string `json:"code"`
-	Message       string `json:"message"`
-}
-
-type Campus struct {
-	Uuid      string `json:"id"`
-	ShortName string `json:"shortName"`
-	FullName  string `json:"fullName"`
-}
-
-type CampusesResponse struct {
-	Campuses []Campus `json:"campuses"`
-}
-
-func GetAllCampuses(token string) (*CampusesResponse, error) {
+func GetAllCampuses(token string) (*model.CampusesResponse, error) {
 	requestUrl := "https://edu-api.21-school.ru/services/21-school/api/v1/campuses"
 
 	client := &http.Client{}
@@ -49,7 +35,7 @@ func GetAllCampuses(token string) (*CampusesResponse, error) {
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		var tribesError ErrorOfGettingTribes
+		var tribesError model.ErrorOfGettingTribes
 		err = json.Unmarshal(body, &tribesError)
 		if err != nil {
 			return nil, err
@@ -57,7 +43,7 @@ func GetAllCampuses(token string) (*CampusesResponse, error) {
 		return nil, status.Errorf(codes.Unknown, "Error getting list of tribes. Status code: %d: %s: %s", tribesError.Status, tribesError.Code, tribesError.Message)
 	}
 
-	var result CampusesResponse
+	var result model.CampusesResponse
 	err = json.Unmarshal(body, &result)
 	if err != nil {
 		return nil, err

@@ -2,20 +2,28 @@ package main
 
 import (
 	"fmt"
-	school_proto "github.com/s21platform/school-proto/school-proto"
-	"github.com/s21platform/school-service/internal/config"
-	"github.com/s21platform/school-service/internal/repository/redis"
-	"github.com/s21platform/school-service/internal/service"
-	"google.golang.org/grpc"
 	"log"
 	"net"
+
+	"google.golang.org/grpc"
+
+	logger_lib "github.com/s21platform/logger-lib"
+	school_proto "github.com/s21platform/school-proto/school-proto"
+	"github.com/s21platform/school-service/internal/config"
+	"github.com/s21platform/school-service/internal/infra"
+	"github.com/s21platform/school-service/internal/repository/redis"
+	"github.com/s21platform/school-service/internal/service"
 )
 
 func main() {
 	cfg := config.MustLoad()
+	logger := logger_lib.New(cfg.Logger.Host, cfg.Logger.Port, cfg.Service.Name, cfg.Platform.Env)
 
 	redisRepo := redis.New(cfg)
-	s := grpc.NewServer()
+	s := grpc.NewServer(
+		grpc.ChainUnaryInterceptor(infra.Logger(logger)),
+	)
+
 	srv := service.New(redisRepo)
 	school_proto.RegisterSchoolServiceServer(s, srv)
 
