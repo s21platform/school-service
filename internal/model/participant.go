@@ -20,7 +20,7 @@ type Participant struct {
 
 type ErrorOfGettingParticipant struct {
 	Status        int32  `json:"status"`
-	ExceptionUuid string `json:"exception_uuid"`
+	ExceptionUuid string `json:"exceptionUuid"`
 	Code          string `json:"code"`
 	Message       string `json:"message"`
 }
@@ -38,7 +38,7 @@ type SkillsParticipant struct {
 
 type ErrorOfGettingSkills struct {
 	Status        int32  `json:"status"`
-	ExceptionUuid string `json:"exception_uuid"`
+	ExceptionUuid string `json:"exceptionUuid"`
 	Code          string `json:"code"`
 	Message       string `json:"message"`
 }
@@ -52,7 +52,7 @@ type PointsParticipant struct {
 }
 type ErrorOfGettingPoints struct {
 	Status        int32  `json:"status"`
-	ExceptionUuid string `json:"exception_uuid"`
+	ExceptionUuid string `json:"exceptionUuid"`
 	Code          string `json:"code"`
 	Message       string `json:"message"`
 }
@@ -71,7 +71,7 @@ type BadgesParticipant struct {
 
 type ErrorOfGettingBadges struct {
 	Status        int32  `json:"status"`
-	ExceptionUuid string `json:"exception_uuid"`
+	ExceptionUuid string `json:"exceptionUuid"`
 	Code          string `json:"code"`
 	Message       string `json:"message"`
 }
@@ -82,7 +82,7 @@ type ParticipantDataResponse struct {
 	ExpValue             int64                       `json:"expValue"`
 	Level                int32                       `json:"level"`
 	ExpToNextLevel       int64                       `json:"expToNextLevel"`
-	CampusUuid           string                      `json:" campusUuid"`
+	CampusUuid           string                      `json:"campusUuid"`
 	Status               string                      `json:"status"`
 	Skills               []SkillsParticipantResponse `json:"skills"`
 	PeerReviewPoints     int64                       `json:"peerReviewPoints"`
