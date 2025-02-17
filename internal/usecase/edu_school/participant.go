@@ -46,9 +46,9 @@ func fetchFromAPI(ctx context.Context, url, token string, result interface{}, er
 func GetParticipantData(ctx context.Context, login, token string) (*model.ParticipantDataResponse, error) {
 	var (
 		participant model.Participant
-		skills      []model.SkillsParticipant
+		skillsResp  []model.SkillsParticipantResponse
 		points      model.PointsParticipant
-		badges      []model.BadgesParticipant
+		badgesResp  []model.BadgesParticipantResponse
 
 		errParticipant model.ErrorOfGettingParticipant
 		errSkills      model.ErrorOfGettingSkills
@@ -65,7 +65,7 @@ func GetParticipantData(ctx context.Context, login, token string) (*model.Partic
 
 	g.Go(func() error {
 		url := "https://edu-api.21-school.ru/services/21-school/api/v1/participants/" + login + "/skills"
-		return fetchFromAPI(ctx, url, token, &skills, &errSkills)
+		return fetchFromAPI(ctx, url, token, &skillsResp, &errSkills)
 	})
 
 	g.Go(func() error {
@@ -75,34 +75,26 @@ func GetParticipantData(ctx context.Context, login, token string) (*model.Partic
 
 	g.Go(func() error {
 		url := "https://edu-api.21-school.ru/services/21-school/api/v1/participants/" + login + "/badges"
-		return fetchFromAPI(ctx, url, token, &badges, &errBadges)
+		return fetchFromAPI(ctx, url, token, &badgesResp, &errBadges)
 	})
 
 	if err := g.Wait(); err != nil {
 		log.Printf("Ошибка получения данных: %v", err)
 		return nil, err
 	}
-
 	result := &model.ParticipantDataResponse{
 		ClassName:            participant.ClassName,
 		ParallelName:         participant.ParallelName,
 		ExpValue:             int64(participant.ExpValue),
 		Level:                participant.Level,
 		ExpToNextLevel:       participant.ExpToNextLevel,
-		CampusUuid:           participant.Campuses[0].Uuid,
+		CampusUuid:           participant.Campus.Uuid,
 		Status:               participant.Status,
-		Skills:               make([]string, len(skills)),
+		Skills:               skillsResp,
 		PeerReviewPoints:     int64(points.PeerReviewPoints),
 		PeerCodeReviewPoints: int64(points.CodeReviewPoints),
 		Coins:                int64(points.Coins),
-		Badges:               make([]string, len(badges)),
-	}
-
-	for i, skill := range skills {
-		result.Skills[i] = skill.Name
-	}
-	for i, badge := range badges {
-		result.Badges[i] = badge.Name
+		Badges:               badgesResp,
 	}
 
 	return result, nil
