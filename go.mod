@@ -7,7 +7,7 @@ require (
 	github.com/redis/go-redis/v9 v9.6.1
 	github.com/s21platform/logger-lib v0.0.3
 	github.com/s21platform/school-proto v0.0.4
-	github.com/s21platform/search-service v0.0.0-20241227200310-00bbde5e3066
+	golang.org/x/sync v0.8.0
 	google.golang.org/grpc v1.68.0
 )
 
