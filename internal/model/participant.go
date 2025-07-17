@@ -28,7 +28,7 @@ type ErrorOfGettingParticipant struct {
 ///v1/participants/{login}/skills
 
 type SkillsParticipantResponse struct {
-	Skills SkillsParticipant `json:"Skills"`
+	Skills []SkillsParticipant `json:"skills"`
 }
 
 type SkillsParticipant struct {
@@ -60,7 +60,7 @@ type ErrorOfGettingPoints struct {
 //v1/participants/{login}/badges
 
 type BadgesParticipantResponse struct {
-	Badges BadgesParticipant `json:"badges"`
+	Badges []BadgesParticipant `json:"badges"`
 }
 
 type BadgesParticipant struct {
@@ -77,16 +77,16 @@ type ErrorOfGettingBadges struct {
 }
 
 type ParticipantDataResponse struct {
-	ClassName            string                      `json:"className"`
-	ParallelName         string                      `json:"parallelName"`
-	ExpValue             int64                       `json:"expValue"`
-	Level                int32                       `json:"level"`
-	ExpToNextLevel       int64                       `json:"expToNextLevel"`
-	CampusUuid           string                      `json:"campusUuid"`
-	Status               string                      `json:"status"`
-	Skills               []SkillsParticipantResponse `json:"skills"`
-	PeerReviewPoints     int64                       `json:"peerReviewPoints"`
-	PeerCodeReviewPoints int64                       `json:"peerCodeReviewPoints"`
-	Coins                int64                       `json:"coins"`
-	Badges               []BadgesParticipantResponse `json:"badges"`
+	ClassName            string                    `json:"className"`
+	ParallelName         string                    `json:"parallelName"`
+	ExpValue             int64                     `json:"expValue"`
+	Level                int32                     `json:"level"`
+	ExpToNextLevel       int64                     `json:"expToNextLevel"`
+	CampusUuid           string                    `json:"campusUuid"`
+	Status               string                    `json:"status"`
+	Skills               SkillsParticipantResponse `json:"skills"`
+	PeerReviewPoints     int64                     `json:"peerReviewPoints"`
+	PeerCodeReviewPoints int64                     `json:"peerCodeReviewPoints"`
+	Coins                int64                     `json:"coins"`
+	Badges               BadgesParticipantResponse `json:"badges"`
 }

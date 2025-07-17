@@ -46,9 +46,9 @@ func fetchFromAPI(ctx context.Context, url, token string, result interface{}, er
 func GetParticipantData(ctx context.Context, login, token string) (*model.ParticipantDataResponse, error) {
 	var (
 		participant model.Participant
-		skillsResp  []model.SkillsParticipantResponse
+		skillsResp  model.SkillsParticipantResponse
 		points      model.PointsParticipant
-		badgesResp  []model.BadgesParticipantResponse
+		badgesResp  model.BadgesParticipantResponse
 
 		errParticipant model.ErrorOfGettingParticipant
 		errSkills      model.ErrorOfGettingSkills
