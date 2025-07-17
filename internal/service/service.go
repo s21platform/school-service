@@ -110,3 +110,54 @@ func (s *Server) GetTribesByCampusUuid(ctx context.Context, in *school.CampusUui
 
 	return &school.TribesOut{Tribes: needTribes}, nil
 }
+
+func (s *Server) GetParticipantData(ctx context.Context, in *school.GetParticipantDataIn) (*school.GetParticipantDataOut, error) {
+	if in.Login == "" {
+		return nil, errors.New("login is empty")
+	}
+
+	log.Println("Trying to get participant data by login:", in.Login)
+
+	token, err := s.redisR.Get(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := edu_school.GetParticipantData(ctx, in.Login, token)
+	if err != nil {
+		log.Printf("error getting participant data: %v", err)
+		return nil, err
+	}
+
+	var skills []*school.Skills
+	for _, s := range resp.Skills {
+		skills = append(skills, &school.Skills{
+			Name:   s.Skills.Name,
+			Points: s.Skills.Points,
+		})
+	}
+
+	var badges []*school.Badges
+	for _, b := range resp.Badges {
+		badges = append(badges, &school.Badges{
+			Name:            b.Badges.Name,
+			ReceiptDateTime: b.Badges.ReceiptDataTime,
+			IconURL:         b.Badges.IconUrl,
+		})
+	}
+
+	return &school.GetParticipantDataOut{
+		ClassName:            resp.ClassName,
+		ParallelName:         resp.ParallelName,
+		ExpValue:             resp.ExpValue,
+		Level:                resp.Level,
+		ExpToNextLevel:       resp.ExpToNextLevel,
+		CampusUuid:           resp.CampusUuid,
+		Status:               resp.Status,
+		Skills:               skills,
+		PeerReviewPoints:     resp.PeerReviewPoints,
+		PeerCodeReviewPoints: resp.PeerCodeReviewPoints,
+		Coins:                resp.Coins,
+		Badges:               badges,
+	}, nil
+}

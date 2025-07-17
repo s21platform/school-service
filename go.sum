@@ -23,6 +23,8 @@ github.com/s21platform/logger-lib v0.0.3 h1:FSrPaJCW+fodzX3Mkce85WsB0/03ZZHtSEXa
 github.com/s21platform/logger-lib v0.0.3/go.mod h1:DpD0CWM17ApEwayEZXhQqb3gos1TpumQfU+uRrpaSCI=
 github.com/s21platform/school-proto v0.0.4 h1:ylYv0/4oyyAOj4hEW30+ieJokOhwO7eJ5G2enp5Kg4c=
 github.com/s21platform/school-proto v0.0.4/go.mod h1:OHdop/i6tGCF6TfX1Wgh9rcjlJaX5OK8AMD5XnBYtm8=
+github.com/s21platform/school-proto v0.0.5 h1:+/mpLQJvRTiYfdUZj8tvT4/ogGW4H2W3FWODPMmXzto=
+github.com/s21platform/school-proto v0.0.5/go.mod h1:OHdop/i6tGCF6TfX1Wgh9rcjlJaX5OK8AMD5XnBYtm8=
 golang.org/x/net v0.29.0 h1:5ORfpBpCs4HzDYoodCDBbwHzdR5UrLBZ3sOnUJmFoHo=
 golang.org/x/net v0.29.0/go.mod h1:gLkgy8jTGERgjzMic6DS9+SP0ajcu6Xu3Orq/SpETg0=
 golang.org/x/sync v0.8.0 h1:3NFvSEYkUoMifnESzZl15y791HH1qU2xm6eCJU5ZPXQ=
