@@ -130,19 +130,19 @@ func (s *Server) GetParticipantData(ctx context.Context, in *school.GetParticipa
 	}
 
 	var skills []*school.Skills
-	for _, s := range resp.Skills {
+	for _, s := range resp.Skills.Skills {
 		skills = append(skills, &school.Skills{
-			Name:   s.Skills.Name,
-			Points: s.Skills.Points,
+			Name:   s.Name,
+			Points: s.Points,
 		})
 	}
 
 	var badges []*school.Badges
-	for _, b := range resp.Badges {
+	for _, b := range resp.Badges.Badges {
 		badges = append(badges, &school.Badges{
-			Name:            b.Badges.Name,
-			ReceiptDateTime: b.Badges.ReceiptDataTime,
-			IconURL:         b.Badges.IconUrl,
+			Name:            b.Name,
+			ReceiptDateTime: b.ReceiptDataTime,
+			IconURL:         b.IconUrl,
 		})
 	}
 
